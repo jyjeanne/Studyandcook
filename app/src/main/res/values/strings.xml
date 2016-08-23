@@ -1,0 +1,131 @@
+<resources>
+    <!-- Application name -->
+    <string name="app_name">Study and Cook</string>
+
+    <!-- Recipes info -->
+    <string name="cook_time">Time</string>
+    <string name="minutes">min</string>
+    <string name="servings">for</string>
+    <string name="persons">persons</string>
+    <string name="price_dollar_symbol">$</string>
+    <string name="person">person</string>
+
+    <!-- Page and menu titles -->
+    <string name="about">About</string>
+    <string name="favorites">Favorites</string>
+    <string name="search">Search</string>
+    <string name="share">Share</string>
+
+    <!-- Search content -->
+    <string name="search_result">Search Result</string>
+    <string name="search_hint">Type Recipe Name</string>
+
+    <!-- Favorite content -->
+    <string name="success_add_data">Recipe successfully added to favorites</string>
+
+    <!-- DO NOT change preferences key below -->
+    <string name="pref_share_key">prefShareKey</string>
+    <string name="pref_rate_review_key">prefRateReviewKey</string>
+
+    <!-- preferences value of about preferences page -->
+    <string name="pref_app_title">Application Name</string>
+    <string name="pref_app_summary">Study and Cook</string>
+    <string name="pref_version_title">Build Version</string>
+    <string name="pref_version_summary">Version 1.0</string>
+    <string name="pref_developer_title">Developer</string>
+    <string name="pref_developer_summary">Jeremy JEANNE</string>
+    <string name="pref_copyright_title">Copyright</string>
+    <string name="pref_copyright_summary">Copyright 2016 Jeremy JEANNE. All rights reserved</string>
+    <string name="pref_share_title">Tell a Friend</string>
+    <string name="pref_share_summary">Tell your friend about this app</string>
+    <string name="pref_rate_review_title">Rate &amp; Review</string>
+    <string name="pref_rate_review_summary">Rate and review this app if you think it is awesome</string>
+
+    <!-- Sharing content -->
+    <string name="share_to">Share to</string>
+    <string name="subject">Hi, I just Try New Recipe</string>
+    <string name="message">You can download Spatullr for Android at </string>
+    <string name="intro_message">Hi, i just try new recipe, </string>
+    <string name="extra_message">. You can also try this recipe by downloading </string>
+    <string name="here">here:</string>
+
+    <!-- Google Play url. Change your.package.name with your own package name. -->
+    <string name="google_play_url">https://play.google.com/store/apps/details?id=your.package.name</string>
+
+    <!-- Banner ad id. Insert your own banner id, you can get banner id via admob. -->
+    <string name="banner_ad_unit_id">BANNER_AD_UNIT_ID</string>
+
+    <!-- Interstitial ad id. Insert your own interstitial id, you can get interstitial id via admob. -->
+    <string name="interstitial_ad_unit_id">INTERSTITIAL_AD_UNIT_ID</string>
+
+    <string-array name="list_recipes_categories">
+        <item>Recipes by meal type</item>
+    </string-array>
+
+    <!-- Confirmation dialog -->
+    <string name="cancel">CANCEL</string>
+    <string name="confirm">CONFIRM</string>
+    <string name="confirm_message">remove recipes from favorites?</string>
+    <string name="remove">REMOVE</string>
+    <string name="success_remove">Successfully removed recipe from favorites</string>
+    <string name="no_recipes">No recipes</string>
+
+    <!-- Pager titles in detail page -->
+    <string-array name="pagers_detail">
+        <item>SUMMARY</item>
+        <item>INGREDIENTS</item>
+        <item>DIRECTIONS</item>
+    </string-array>
+
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+
+    <!-- ripple duration -->
+    <integer name="ripple_duration">30</integer>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_recipes">RecipesActivity</string>
+    <string name="tab_recipe_categories">Recipes</string>
+    <string name="tab_advices">Advices</string>
+    <string name="tab_tools">Tools</string>
+    <string name="title_activity_menu">MenuActivity</string>
+    <string name="splash_title"><![CDATA[Study & Cook]]></string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="first_tab_category">recipes</string>
+    <string name="second_tab_category">advices</string>
+    <string name="third_tab_category">tools</string>
+    <string name="title_activity_create">CreateActivity</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- form create recipe -->
+    <string name="form_hint_title">Alarm title (required)</string>
+    <string name="form_hint_description">Alarm description (optional)</string>
+    <string name="error_title_min_characters">At least %1$d characters</string>
+    <string name="main_activity_explanation">Click the button to try it!</string>
+    <string name="hint_recipe_name">Recipe name</string>
+    <string name="hint_recipe_price">Recipe price</string>
+    <string name="hint_recipe_time">Recipe time</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <string-array name="steps_names">
+        <item>Picture</item>
+        <item>Titlen</item>
+        <item>Time</item>
+        <item>Summary</item>
+        <item>person_number</item>
+
+    </string-array>
+
+
+</resources>

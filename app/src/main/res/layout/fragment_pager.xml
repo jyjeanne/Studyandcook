@@ -1,0 +1,35 @@
+<com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fillViewport="true"
+    android:overScrollMode="never">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.pongodev.recipesapp.fragments.FragmentPager"
+        android:background="@color/material_background_color">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <org.sufficientlysecure.htmltextview.HtmlTextView
+                android:id="@+id/txtContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/body_1"
+                android:textColor="@color/primary_text"
+                android:lineSpacingExtra="@dimen/line_spacing_body"
+                android:layout_marginTop="@dimen/standar_margin"
+                android:layout_marginRight="@dimen/standar_margin"
+                android:layout_marginBottom="@dimen/standar_margin"
+                android:layout_marginLeft="@dimen/standar_margin" />
+        </LinearLayout>
+
+    </FrameLayout>
+</com.github.ksoichiro.android.observablescrollview.ObservableScrollView>

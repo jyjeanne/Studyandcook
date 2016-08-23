@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/item_twoline_height"
+    android:background="@drawable/list_item_normal"
+    android:clickable="true">
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/standar_margin">
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imgRecipeImage"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="@dimen/thumb_width"
+            android:layout_height="@dimen/thumb_height"
+            android:scaleType="centerCrop"
+            android:layout_marginLeft="@dimen/thumb_margin_left"
+            android:layout_marginBottom="@dimen/thumb_margin_bottom"
+            app:riv_mutate_background="true"
+            app:riv_border_color="@color/divider_color"
+            app:riv_border_width="@dimen/thumb_border_width"
+            app:riv_oval="true"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/item_padding_with_icon"
+        android:paddingRight="@dimen/standar_margin"
+        android:paddingTop="@dimen/standar_margin"
+        android:paddingBottom="@dimen/standar_margin"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/txtRecipeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/title"
+            android:textColor="@color/primary_text"
+            android:ellipsize="end"
+            android:singleLine="true"/>
+        <TextView
+            android:id="@+id/txtRecipeInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/subhead"
+            android:textColor="@color/secondary_text"
+            android:ellipsize="end"
+            android:singleLine="true"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        android:background="@color/divider_color"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="@dimen/item_padding_with_icon"/>
+</RelativeLayout>
+

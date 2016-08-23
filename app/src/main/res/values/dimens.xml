@@ -1,0 +1,57 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="standar_margin">16dp</dimen>
+
+    <!-- paddings and margins -->
+    <dimen name="item_padding_with_icon">111dp</dimen>
+    <dimen name="item_padding_without_icon">16dp</dimen>
+    <dimen name="item_padding_top">16dp</dimen>
+    <dimen name="item_padding_right">16dp</dimen>
+    <dimen name="item_padding_bottom">20dp</dimen>
+
+    <!-- text sizes -->
+    <dimen name="headline">24sp</dimen>
+    <dimen name="title">20sp</dimen>
+    <dimen name="subhead">16sp</dimen>
+    <dimen name="body_1">14sp</dimen>
+    <dimen name="line_spacing_body">3dp</dimen>
+
+    <!-- other sizes -->
+    <dimen name="thumb_width">72dp</dimen>
+    <dimen name="thumb_height">72dp</dimen>
+    <dimen name="thumb_margin_left">5dp</dimen>
+    <dimen name="thumb_margin_bottom">5dp</dimen>
+    <dimen name="thumb_radius">5dp</dimen>
+    <dimen name="thumb_border_width">1dp</dimen>
+    <dimen name="item_padding_left_with_icon_small">75dp</dimen>
+    <dimen name="item_padding_right_with_fab">100dp</dimen>
+    <dimen name="thumb_width_small">36dp</dimen>
+    <dimen name="thumb_height_small">36dp</dimen>
+    <dimen name="tab_height">48dp</dimen>
+    <dimen name="toolbar_elevation">4dp</dimen>
+
+    <dimen name="fab_width">56dp</dimen>
+    <dimen name="fab_height">56dp</dimen>
+    <dimen name="item_singleline_height">56dp</dimen>
+    <dimen name="item_twoline_height">96dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="slidingup_height">200dp</dimen>
+    <dimen name="slidingup_shadow">4dp</dimen>
+    <dimen name="flexible_space_image_height">320dp</dimen>
+    <dimen name="flexible_space_show_fab_offset">120dp</dimen>
+    <dimen name="parallax_image_height">180dp</dimen>
+    <dimen name="extended_toolbar_height">128dp</dimen>
+    <dimen name="circleprogressbar_width">60dp</dimen>
+    <dimen name="circleprogressbar_height">60dp</dimen>
+    <dimen name="title_margin_top">50dp</dimen>
+    <dimen name="floating_button_margin_top">18dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+    <!-- form sizes -->
+    <dimen name="form_image_height">220dp</dimen>
+</resources>

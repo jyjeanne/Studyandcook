@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app main color (toolbar color) configuration -->
+    <color name="primary_color">#FF5722</color>
+    <color name="dark_primary_color">#E64A19</color>
+    <color name="light_primary_color">#FFCCBC</color>
+    <color name="text_and_icon_color">#FFFFFF</color>
+    <color name="accent_color">#FF9800</color>
+    <color name="floating_button_color">#03A9F4</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#727272</color>
+    <color name="divider_color">#B6B6B6</color>
+    <color name="window_background_color">#E6E8E9</color>
+    <color name="material_background_color">#FFFFFF</color>
+    <color name="splash_screen_background_color">#E64A19</color>
+</resources>

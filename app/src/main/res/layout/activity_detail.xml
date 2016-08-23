@@ -1,0 +1,122 @@
+<com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/material_background_color">
+
+    <FrameLayout
+        android:id="@+id/pager_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary_color"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/flexible_space_image_height"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:id="@+id/overlay"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/flexible_space_image_height"
+            android:background="@color/primary_color" />
+
+        <include layout="@layout/toolbar_transparent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/flexible_space_image_height">
+
+            <FrameLayout
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/tab_height"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:id="@+id/lytTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left"
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/title_margin_top"
+                    android:paddingLeft="@dimen/standar_margin"
+                    android:paddingRight="@dimen/item_padding_right_with_fab"
+                    android:paddingTop="@dimen/standar_margin"
+                    android:paddingBottom="@dimen/standar_margin"
+                    android:background="@color/primary_color">
+
+                    <TextView
+                        android:id="@+id/txtRecipeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/headline"
+                        android:textColor="@color/text_and_icon_color"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/txtRecipeInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/subhead"
+                        android:textColor="@color/text_and_icon_color"
+                        android:ellipsize="end"
+                        android:singleLine="true"/>
+
+                </LinearLayout>
+
+                <net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabFavorite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|right"
+                    android:layout_marginTop="@dimen/floating_button_margin_top"
+                    android:layout_marginBottom="@dimen/standar_margin"
+                    android:layout_marginRight="@dimen/standar_margin"
+                    app:fab_colorNormal="@color/accent_color"
+                    app:fab_colorPressed="@color/accent_color"/>
+
+
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/flexible_space_image_height"
+                android:background="@android:color/transparent" />
+        </RelativeLayout>
+
+        <com.google.samples.apps.iosched.ui.SlidingTabLayout
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/tab_height"
+            android:background="@color/primary_color" />
+
+
+    </FrameLayout>
+
+    <com.lsjwzh.widget.materialloadingprogressbar.CircleProgressBar
+        android:id="@+id/prgLoading"
+        android:layout_width="@dimen/circleprogressbar_width"
+        android:layout_height="@dimen/circleprogressbar_height"
+        android:layout_gravity="center"
+        app:mlpb_enable_circle_background="true"/>
+
+</com.github.ksoichiro.android.observablescrollview.TouchInterceptionFrameLayout>

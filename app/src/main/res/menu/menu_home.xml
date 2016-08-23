@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pongodev.recipesapp.activities.HomeActivity" >
+    <!-- menu item to display search icon, favorites, and about in HomeActivity -->
+    <item android:id="@+id/menuSearch"
+        android:title="@string/search"
+        android:icon="@mipmap/ic_search_white_36dp"
+        app:showAsAction="collapseActionView|ifRoom"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
+    <item
+        android:id="@+id/menuFavorites"
+        android:title="@string/favorites"
+        android:icon="@mipmap/ic_favorite_white_36dp"
+        app:showAsAction="collapseActionView|ifRoom" />
+    <item
+        android:id="@+id/menuAbout"
+        android:title="@string/about"
+        app:showAsAction="never"/>
+    <!-- end of menu item -->
+</menu>
+

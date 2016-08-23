@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.pongodev.recipesapp.activities.HomeActivity" >
+    <!-- menu item to display share icon in ActivityDetail -->
+    <item
+        android:id="@+id/menuShare"
+        android:title="@string/share"
+        android:icon="@mipmap/ic_share_white_36dp"
+        app:showAsAction="always"/>
+    <!-- end of menu item -->
+</menu>
