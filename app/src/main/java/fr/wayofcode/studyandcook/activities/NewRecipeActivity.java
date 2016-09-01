@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,7 +27,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -94,15 +94,19 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     public static final String STATE_PERSON_NUMBER = "person_number";
 
     // Recipe price step
-    private int recipePrice;
+    private double recipePrice;
+    private double firstDigit;
+    private double secondDigit;
+    private double thirdDigit;
+    private double fourthDigit;
     private TextView priceTextView;
-    private RelativeLayout priceRelativeLayout;
+    private LinearLayout priceLinearLayout;
     private AlertDialog priceRecipeDialog ;
     private NumberPicker firstNumberPicker;
     private NumberPicker secondNumberPicker;
     private NumberPicker thirdNumberPicker;
     private NumberPicker fourthNumberPicker;
-    private static final int MIN_PRICE_NUMBER = 1;
+    private static final int MIN_PRICE_NUMBER = 0;
     private static final int MAX_PRICE_NUMBER = 9;
     public static final String STATE_PRICE = "price";
 
@@ -268,7 +272,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
      */
     private String convertToPriceFormat(double originPrice) {
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00");
-        return  decimalFormat.format(originPrice);
+        return  decimalFormat.format(originPrice)+" $";
 
     }
 
@@ -489,7 +493,13 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     private void setPricePickers( int minPrice , int maxPrice) {
         recipePrice=0;
-        priceRelativeLayout = new RelativeLayout(this);
+        firstDigit=0;
+        secondDigit=0;
+        thirdDigit=0;
+        fourthDigit=0;
+        priceLinearLayout = new LinearLayout(this);
+        priceLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
         // first picker
         firstNumberPicker = new NumberPicker(this);
         firstNumberPicker.setMinValue(minPrice); // restricted number to minimum value i.e 1
@@ -502,14 +512,12 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal)
             {
-                recipePrice=recipePrice-oldVal*10;
-                recipePrice=recipePrice+newVal*10;
-                priceTextView.setText(convertToPriceFormat(recipePrice));
+                firstDigit=newVal*10;
             }
         });
 
 
-        // seconde picker
+        // second picker
         secondNumberPicker = new NumberPicker(this);
         secondNumberPicker.setMinValue(minPrice); // restricted number to minimum value i.e 1
         secondNumberPicker.setMaxValue(maxPrice); // restricked number to maximum value i.e. 9
@@ -521,32 +529,34 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal)
             {
-                recipePrice=recipePrice-oldVal;
-                recipePrice=recipePrice+newVal;
-                priceTextView.setText(convertToPriceFormat(recipePrice));
+                //recipePrice=recipePrice-oldVal;
+                secondDigit=newVal;
+
             }
         });
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(50, 50);
 
-        RelativeLayout.LayoutParams numPicerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        RelativeLayout.LayoutParams qPicerParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(50, 50);
+        params.gravity = Gravity.CENTER;
+
+        LinearLayout.LayoutParams numPicerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        numPicerParams.weight = 1;
+
+        LinearLayout.LayoutParams qPicerParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        qPicerParams.weight = 1;
+
+        priceLinearLayout.setLayoutParams(params);
+        priceLinearLayout.addView(firstNumberPicker,numPicerParams);
+        priceLinearLayout.addView(secondNumberPicker,qPicerParams);
 
 
-        numPicerParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        qPicerParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        priceRelativeLayout.setLayoutParams(params);
-        priceRelativeLayout.addView(firstNumberPicker,numPicerParams);
-        priceRelativeLayout.addView(secondNumberPicker,qPicerParams);
-
-
-
-        AlertDialog.Builder builder  = new AlertDialog.Builder(this).setView(priceRelativeLayout);
+        AlertDialog.Builder builder  = new AlertDialog.Builder(this).setView(priceLinearLayout);
         builder.setTitle("Price");
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                recipePrice=firstDigit+secondDigit+thirdDigit+fourthDigit;
+                priceTextView.setText(convertToPriceFormat(recipePrice));
                 verticalStepperForm.setActiveStepAsCompleted();
                 dialog.dismiss();
 
