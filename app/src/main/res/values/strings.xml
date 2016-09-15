@@ -126,6 +126,7 @@
         <item>person_number</item>
         <item>Categories</item>
         <item>Price</item>
+        <item>Ingredient</item>
     </string-array>
 
 
