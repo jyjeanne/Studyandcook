@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#000000"
-        android:text="08:30"
+        android:text="01:30"
         android:paddingRight="24dp"
         android:paddingEnd="24dp"
         android:textSize="42sp"

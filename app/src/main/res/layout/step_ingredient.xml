@@ -2,20 +2,27 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="fill_parent" >
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="fill_parent"
+
+
+    <TextView
+        android:id="@+id/ingredients_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:textColor="#000000"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="false"
-        />
+        android:hint="Empty"
+        android:paddingRight="24dp"
+        android:paddingEnd="24dp"
+        android:textSize="32sp"
+        android:clickable="true" />
+
     <Button
-        android:id="@+id/addBtn"
-        android:text="Add New Item"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:onClick="addItems"/>
+    android:id="@+id/addBtn"
+    android:text="Add New Item"
+        android:textColor="#ffffff"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:onClick="addItems"/>
 
 </LinearLayout>

@@ -68,6 +68,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     // Recipe picture step
     private ImageView mImgImageRecipe;
     private ImageView mImgViewButton;
+    private Button addPictureBtn;
     public static final String STATE_RECIPE_PICTURE = "picture";
 
     // Recipe title step
@@ -85,6 +86,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private TextView timeTextView;
     private TimePickerDialog timePicker;
     private Pair<Integer, Integer> time;
+    private static final int DEFAULT_TIME_HOUR=1;
+    private static final int DEFAULT_TIME_MINUTE=30;
     public static final String STATE_TIME_HOUR = "time_hour";
     public static final String STATE_TIME_MINUTES = "time_minutes";
 
@@ -112,6 +115,9 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     // Ingredient step
     private EditText editTxtIngredient;
     private Button btnAdd;
+    private String ingredients;
+    private Button addElementBtn;
+    private TextView ingredientTextView;
     private AlertDialog ingredientRecipeDialog ;
     private ListView listViewIngredient;
     private LinearLayout ingredientLinearLayout;
@@ -154,8 +160,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         this.mImgImageRecipe = (ImageView) this.findViewById(R.id.image_recipe);
 
         // Time step vars
-        time = new Pair<>(8, 30);
-        setTimePicker(8, 30);
+        time = new Pair<>(DEFAULT_TIME_HOUR, DEFAULT_TIME_MINUTE);
+        setTimePicker(DEFAULT_TIME_HOUR, DEFAULT_TIME_MINUTE);
 
         // Number person step vars
         setPersonNumberPicker(MIN_PERSON_NUMBER,MAX_PERSON_NUMBER);
@@ -267,7 +273,6 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                     intent.putExtra(STATE_DESCRIPTION, descriptionEditText.getText().toString());
                     intent.putExtra(STATE_TIME_HOUR, time.first);
                     intent.putExtra(STATE_TIME_MINUTES, time.second);
-                    //intent.putExtra(STATE_WEEK_DAYS, weekDays);
                     // You must set confirmBack to false before calling finish() to avoid the confirmation dialog
                     confirmBack = false;
                     finish();
@@ -291,34 +296,36 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     }
 
-
-
     // STEP CREATION
 
     private View createRecipePictureStep() {
         // This step view is generated programmatically
+        addPictureBtn= new Button(this);
+        addPictureBtn.setCompoundDrawablesWithIntrinsicBounds(0,0,android.R.drawable.ic_menu_camera,0);
+        addPictureBtn.setCompoundDrawablePadding(15);
+        addPictureBtn.setBackgroundColor(Color.GRAY);
+        addPictureBtn.setText("+");
+
         mImgViewButton = new ImageView(this);
         mImgViewButton.setBackgroundResource(android.R.drawable.ic_menu_camera);
-        mImgViewButton.setOnTouchListener(new View.OnTouchListener() {
+        addPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View arg0, MotionEvent arg1) {
-                switch (arg1.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
+            public void onClick(View v) {
                         try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
                         } catch (Exception e) {
                             Toast.makeText(getApplicationContext(), "Couldn't load photo, error : " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                        break;
-                    }
 
-                }
+
+
+
                 verticalStepperForm.setActiveStepAsCompleted();
-                return true;
+                //return true;
             }
         });
-        return mImgViewButton;
+        return addPictureBtn;
     }
 
     private View createCategoriesStep() {
@@ -345,6 +352,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         // This step view is generated programmatically
         recipeNameEditText = new EditText(this);
         recipeNameEditText.setHint(R.string.form_hint_title);
+        recipeNameEditText.setBackgroundColor(Color.GRAY);
         recipeNameEditText.setTextColor(Color.BLACK);
         recipeNameEditText.setSingleLine(true);
         recipeNameEditText.addTextChangedListener(new TextWatcher() {
@@ -376,6 +384,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private View createRecipeDescriptionStep() {
         descriptionEditText = new EditText(this);
         descriptionEditText.setHint(R.string.form_hint_description);
+        descriptionEditText.setBackgroundColor(Color.LTGRAY);
         descriptionEditText.setTextColor(Color.BLACK);
         descriptionEditText.setSingleLine(true);
         descriptionEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -389,13 +398,12 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     }
 
     private  View createIngredientStep() {
-        adapterIngredient = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, listIngredient);
 
         // This step view is generated by inflating a layout XML file
         LayoutInflater inflater = LayoutInflater.from(getBaseContext());
         LinearLayout ingredientStepContent =
                 (LinearLayout) inflater.inflate(R.layout.step_ingredient, null, false);
-        listViewIngredient = (ListView)  ingredientStepContent.findViewById(R.id.listView);
+        ingredientTextView = (TextView)  ingredientStepContent.findViewById(R.id.ingredients_list);
 
         btnAdd = (Button) ingredientStepContent.findViewById(R.id.addBtn);
         btnAdd.setOnClickListener(new View.OnClickListener() {
@@ -483,23 +491,41 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
         listIngredient= new ArrayList<>();
 
+        addElementBtn=new Button(this);
+        addElementBtn.setText("ADD NEW INGREDIENT");
+        addElementBtn.setTextColor(Color.WHITE);
+        addElementBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // this line adds the data of your EditText and puts in your array
+                listIngredient.add("+ "+editTxtIngredient.getText().toString());
+                editTxtIngredient.setText("");
+                // next thing you have to do is check if your adapter has changed
+                //adapterIngredient.add(editTxtIngredient.getText().toString());
+                adapterIngredient.notifyDataSetChanged();
+            }
+        });
+
+        listViewIngredient= new ListView(this);
+
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
-        adapterIngredient = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, listIngredient);
-
+        adapterIngredient = new ArrayAdapter<>(getApplicationContext(), R.layout.list_ingredient_item, listIngredient);
 
         listViewIngredient.setAdapter(adapterIngredient);
 
         //create a layout
         LinearLayout.LayoutParams params =
                 new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.FILL_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
         ingredientLinearLayout = new LinearLayout(this);
         ingredientLinearLayout.setOrientation(LinearLayout.VERTICAL);
         ingredientLinearLayout.setLayoutParams(params);
 
         ingredientLinearLayout.addView(editTxtIngredient);
+        ingredientLinearLayout.addView(addElementBtn);
+        ingredientLinearLayout.addView(listViewIngredient);
 
         AlertDialog.Builder builder  = new AlertDialog.Builder(this).setView(ingredientLinearLayout);
         builder.setTitle("Ingredients");
@@ -507,11 +533,44 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // this line adds the data of your EditText and puts in your array
-                listIngredient.add(editTxtIngredient.getText().toString());
-                // next thing you have to do is check if your adapter has changed
-                adapterIngredient.add(editTxtIngredient.getText().toString());
+                if(!listIngredient.isEmpty() )
+                {
+                    if(listIngredient.size() >1) {
+                        int i = 0;
+                        StringBuilder concatIng = new StringBuilder();
+                        for (String ing : listIngredient) {
+
+                            concatIng.append(ing);
+
+                            if (i != (listIngredient.size() - 1)) {
+                                concatIng.append("\n");
+                            }
+                            i++;
+                        }
+                        if(ingredients!=null) {
+                            ingredients = ingredients + "\n" + concatIng.toString();
+                        }
+                        else
+                        {
+                            ingredients= concatIng.toString();
+                        }
+                    }
+                    else
+                    {
+                        if(ingredients!=null) {
+                            ingredients = ingredients +"\n"+listIngredient.get(0);
+                        }
+                        else
+                        {
+                            ingredients=listIngredient.get(0);
+                        }
+
+                    }
+                }
+                ingredientTextView.setText(ingredients);
+
                 verticalStepperForm.setActiveStepAsCompleted();
-                adapterIngredient.notifyDataSetChanged();
+
                 dialog.dismiss();
 
             }
@@ -536,11 +595,11 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
         // Creating adapter for spinner
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, labels);
+                android.R.layout.simple_spinner_dropdown_item, labels);
 
         // attaching data adapter to spinner
         categoriesSpinner.setAdapter(dataAdapter);
-
+        categoriesSpinner.setPadding(50,10,15,10);
         categoriesSpinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener()
         {
             @Override
@@ -556,7 +615,19 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
         });
 
-        AlertDialog.Builder builder  = new AlertDialog.Builder(this).setView(categoriesSpinner);
+        //create a layout
+        LinearLayout.LayoutParams params =
+                new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout categoriesLinearLayout= new LinearLayout(this);
+        categoriesLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        categoriesLinearLayout.setLayoutParams(params);
+
+        categoriesLinearLayout.addView(categoriesSpinner);
+
+
+        AlertDialog.Builder builder  = new AlertDialog.Builder(this).setView(categoriesLinearLayout);
         builder.setTitle("Categories");
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
