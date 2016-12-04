@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +20,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -42,13 +43,14 @@ import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
 import ernestoyaquello.com.verticalstepperform.fragments.BackConfirmationFragment;
 import ernestoyaquello.com.verticalstepperform.interfaces.VerticalStepperForm;
 import fr.wayofcode.studyandcook.R;
+import fr.wayofcode.studyandcook.adapters.DirectionAdapter;
 import fr.wayofcode.studyandcook.databases.DbHelperRecipes;
+import fr.wayofcode.studyandcook.model.Direction;
 
 public class NewRecipeActivity extends AppCompatActivity implements VerticalStepperForm {
 
-    // Constantes
+    // Constants
     private static final int CAMERA_PIC_REQUEST = 22;
-
     public static final String NEW_RECIPE_ADDED = "new_recipe_added";
 
     // Information about the steps/fields of the form
@@ -57,7 +59,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private static final int TIME_STEP_NUM = 2;
     private static final int SUMMARY_DESCRIPTION_STEP_NUM = 3;
     private static final int NUMBER_PERSON_STEP_NUM = 4;
-    private static final int RECIPE_CATEGORIE_STEP_NUM = 5;
+    private static final int RECIPE_CATEGORY_STEP_NUM = 5;
     private static final int PRICE_STEP_NUM = 6;
     private static final int INGREDIENT_DESCRIPTION_STEP_NUM = 7;
     private static final int DIRECTIONS_DESCRIPTION_STEP_NUM = 8;
@@ -73,6 +75,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     // Recipe title step
     private EditText recipeNameEditText;
+    private TextInputLayout titleTxtInputLayout;
     private static final int MIN_CHARACTERS_RECIPE_NAME = 3;
     public static final String STATE_RECIPE_NAME = "title";
 
@@ -130,6 +133,19 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private static final int MIN_CHARACTERS_RECIPE_DESCRIPTION = 3;
     public static final String STATE_DESCRIPTION = "description";
 
+    // Direction step
+    private EditText directionEditTxt;
+    private Button directionAddBtn;
+    private String directions;
+    private TextView directionTextView;
+    private int directionCounter;
+    private Button addNewDirectionBtn;
+    private AlertDialog directionRecipeDialog ;
+    private ListView directionListView;
+    private LinearLayout directionLinearLayout;
+    private DirectionAdapter adapterDirection;
+    private ArrayList<Direction> listDirection;
+    public static final String STATE_DIRECTION = "direction";
 
     private boolean confirmBack = true;
     private ProgressDialog progressDialog;
@@ -175,6 +191,9 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         // Ingredient step vars
         setIngredientComponent();
 
+        // Direction step vars
+        setDirectionComponent();
+
         // Vertical Stepper form vars
         int colorPrimary = ContextCompat.getColor(getApplicationContext(), R.color.primary_color);
         int colorPrimaryDark = ContextCompat.getColor(getApplicationContext(), R.color.dark_primary_color);
@@ -214,7 +233,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             case SUMMARY_DESCRIPTION_STEP_NUM:
                 view = createRecipeDescriptionStep();
                 break;
-            case RECIPE_CATEGORIE_STEP_NUM:
+            case RECIPE_CATEGORY_STEP_NUM:
                 view = createCategoriesStep();
                 break;
             case PRICE_STEP_NUM:
@@ -223,6 +242,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             case INGREDIENT_DESCRIPTION_STEP_NUM:
                 view = createIngredientStep();
                 break;
+            case DIRECTIONS_DESCRIPTION_STEP_NUM:
+                view = createDirectionStep();
         }
         return view;
     }
@@ -273,6 +294,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                     intent.putExtra(STATE_DESCRIPTION, descriptionEditText.getText().toString());
                     intent.putExtra(STATE_TIME_HOUR, time.first);
                     intent.putExtra(STATE_TIME_MINUTES, time.second);
+                    intent.putExtra(STATE_INGREDIENT,ingredients);
+                    intent.putExtra(STATE_RECIPE_CATEGORIES, categoriesTextView.getText().toString());
                     // You must set confirmBack to false before calling finish() to avoid the confirmation dialog
                     confirmBack = false;
                     finish();
@@ -301,13 +324,11 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private View createRecipePictureStep() {
         // This step view is generated programmatically
         addPictureBtn= new Button(this);
-        addPictureBtn.setCompoundDrawablesWithIntrinsicBounds(0,0,android.R.drawable.ic_menu_camera,0);
+
+        addPictureBtn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_camera,0,0,0);
         addPictureBtn.setCompoundDrawablePadding(15);
         addPictureBtn.setBackgroundColor(Color.GRAY);
-        addPictureBtn.setText("+");
-
-        mImgViewButton = new ImageView(this);
-        mImgViewButton.setBackgroundResource(android.R.drawable.ic_menu_camera);
+        addPictureBtn.setText("Add picture ");
         addPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -318,11 +339,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                             Toast.makeText(getApplicationContext(), "Couldn't load photo, error : " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
 
-
-
-
                 verticalStepperForm.setActiveStepAsCompleted();
-                //return true;
+
             }
         });
         return addPictureBtn;
@@ -350,11 +368,30 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     private View createRecipeTitleStep() {
         // This step view is generated programmatically
+
+        // EditText
+        // Instantiate EditText view which will be held inside of
+        // TextInputLayout
         recipeNameEditText = new EditText(this);
+        // Add an ID to it
+        recipeNameEditText.setId(View.generateViewId());
+        // Get the Hint text for EditText field which will be presented to the
+        // user in the TextInputLayout
         recipeNameEditText.setHint(R.string.form_hint_title);
-        recipeNameEditText.setBackgroundColor(Color.GRAY);
+        // Set color of the hint text inside the EditText field
+        recipeNameEditText.setHintTextColor(Color.BLACK);
+        // Set the font size of the text that the user will enter
+        recipeNameEditText.setTextSize(16);
+
+        recipeNameEditText.setBackgroundColor(Color.LTGRAY);
+        // Set the color of the text inside the EditText field
         recipeNameEditText.setTextColor(Color.BLACK);
-        recipeNameEditText.setSingleLine(true);
+        // Define layout params for the EditTExt field
+        RelativeLayout.LayoutParams editTextParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        // Set editText layout parameters to the editText field
+        recipeNameEditText.setLayoutParams(editTextParams);
+
         recipeNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -378,7 +415,24 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                 return false;
             }
         });
-        return recipeNameEditText;
+
+        /*
+         * Next, you do the same thing for the TextInputLayout (instantiate,
+         * generate and set ID, set layoutParams, set layoutParamt for
+         * TextInputLayout
+         */
+
+        // TextInputLayout
+        titleTxtInputLayout = new TextInputLayout(this);
+        titleTxtInputLayout.setId(View.generateViewId());
+        RelativeLayout.LayoutParams textInputLayoutParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        titleTxtInputLayout.setLayoutParams(textInputLayoutParams);
+
+        // Then you add editText into a textInputLayout
+        titleTxtInputLayout.addView(recipeNameEditText, editTextParams);
+
+        return titleTxtInputLayout;
     }
 
     private View createRecipeDescriptionStep() {
@@ -395,6 +449,29 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             }
         });
         return descriptionEditText;
+    }
+
+    private View createDirectionStep() {
+        // This step view is generated by inflating a layout XML file
+        LayoutInflater inflater = LayoutInflater.from(getBaseContext());
+        LinearLayout directionStepContent =
+                (LinearLayout) inflater.inflate(R.layout.step_direction, null, false);
+        directionListView = (ListView)  directionStepContent.findViewById(R.id.list_direction);
+        adapterDirection=new DirectionAdapter(this,listDirection);
+        directionListView.setAdapter(adapterDirection);
+
+        directionAddBtn = (Button) directionStepContent.findViewById(R.id.directionAddBtn);
+        directionAddBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Test
+                if(directionRecipeDialog==null) {
+                    setIngredientComponent();
+                }
+                directionRecipeDialog.show();
+            }
+        });
+        return  directionStepContent;
     }
 
     private  View createIngredientStep() {
@@ -486,6 +563,41 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                 }, hour, minutes, true);
     }
 
+    private void setDirectionComponent() {
+
+        directionCounter=0;
+        directionEditTxt = new EditText(this);
+
+        listDirection= new ArrayList<>();
+
+        adapterDirection=new DirectionAdapter(this, listDirection);
+
+        addNewDirectionBtn=new Button(this);
+        addNewDirectionBtn.setText("ADD NEW DIRECTION");
+        addNewDirectionBtn.setTextColor(Color.WHITE);
+        addNewDirectionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // this line adds the data of your EditText and puts in your array
+                if(directionEditTxt.getText().toString() != null && directionEditTxt.getText().toString().trim() != ""  ) {
+
+                    Direction direction = new Direction(Integer.toString(directionCounter), directionEditTxt.getText().toString());
+                    listDirection.add(direction);
+                    directionEditTxt.setText("");
+                    // next thing you have to do is check if your adapter has changed
+                    adapterDirection.add(direction);
+                    adapterDirection.notifyDataSetChanged();
+                    ;
+                    directionCounter++;
+                }
+            }
+        });
+
+
+
+    }
+
+
     private void setIngredientComponent() {
         editTxtIngredient = new EditText(this);
 
@@ -497,12 +609,15 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         addElementBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // this line adds the data of your EditText and puts in your array
-                listIngredient.add("+ "+editTxtIngredient.getText().toString());
-                editTxtIngredient.setText("");
-                // next thing you have to do is check if your adapter has changed
-                //adapterIngredient.add(editTxtIngredient.getText().toString());
-                adapterIngredient.notifyDataSetChanged();
+
+                if(editTxtIngredient.getText().toString() != null && editTxtIngredient.getText().toString().trim() != ""  ) {
+                    // this line adds the data of your EditText and puts in your array
+                    listIngredient.add("+ " + editTxtIngredient.getText().toString());
+                    editTxtIngredient.setText("");
+                    // next thing you have to do is check if your adapter has changed
+                    //adapterIngredient.add(editTxtIngredient.getText().toString());
+                    adapterIngredient.notifyDataSetChanged();
+                }
             }
         });
 

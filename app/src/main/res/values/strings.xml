@@ -127,6 +127,7 @@
         <item>Categories</item>
         <item>Price</item>
         <item>Ingredient</item>
+        <item>Direction</item>
     </string-array>
 
 
