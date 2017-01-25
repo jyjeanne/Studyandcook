@@ -92,7 +92,7 @@ public class DbHelperRecipes extends SQLiteOpenHelper {
     }
 
     // Method to check database on path
-    private boolean checkDataBase(){
+    public boolean checkDataBase(){
         File dbFile = new File(DB_PATH + DB_NAME);
         return dbFile.exists();
     }
@@ -146,7 +146,7 @@ public class DbHelperRecipes extends SQLiteOpenHelper {
 
     public List<String> getAllCategoriesLabels(){
 
-        List<String> labels = new ArrayList<String>();
+        List<String> labels = new ArrayList<>();
 
         Cursor cursor = null;
 
@@ -155,6 +155,7 @@ public class DbHelperRecipes extends SQLiteOpenHelper {
                     TABLE_CATEGORIES,
                     new String[]{CATEGORY_ID, CATEGORY_NAME},
                     null, null, null, null, null);
+
             cursor.moveToFirst();
 
             if (!cursor.isAfterLast()){
@@ -172,6 +173,9 @@ public class DbHelperRecipes extends SQLiteOpenHelper {
         }catch (SQLException e){
             Log.e("DB Error", e.toString());
             e.printStackTrace();
+        }catch (Exception ex){
+            Log.e("DB Error", ex.toString());
+            ex.printStackTrace();
         }
 
         return labels;

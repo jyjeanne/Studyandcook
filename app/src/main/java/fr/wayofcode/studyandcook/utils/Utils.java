@@ -4,9 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Environment;
 import android.view.View;
 
 import com.google.android.gms.ads.AdView;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Created by jerem_000 on 22/05/2016.
@@ -25,6 +30,7 @@ public class Utils {
     public static final String ARG_ACTIVITY_SEARCH = "activities.SearchActivity";
     public static final String ARG_ACTIVITY_FAVORITES = "activities.FavoritesActivity";
     public static final String ARG_TRIGGER = "trigger";
+    public static final String PICTURE_EXTERNAL_FOLDER = "/DirName";
 
     // Configurable parameters. you can configure these parameter.
     // Set database path. Change  fr.wayofcode.studyandcook with your own package name.
@@ -50,6 +56,30 @@ public class Utils {
         }else {
             ad.setVisibility(View.GONE);
             return false;
+        }
+    }
+
+    // Method used to save picture
+    private void createDirectoryAndSaveFile(Bitmap imageToSave, String fileName) {
+
+        File direct = new File(Environment.getExternalStorageDirectory() + PICTURE_EXTERNAL_FOLDER);
+
+        if (!direct.exists()) {
+            File wallpaperDirectory = new File("/sdcard"+PICTURE_EXTERNAL_FOLDER+"/");
+            wallpaperDirectory.mkdirs();
+        }
+
+        File file = new File(new File("/sdcard"+PICTURE_EXTERNAL_FOLDER+"/"), fileName);
+        if (file.exists()) {
+            file.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            imageToSave.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

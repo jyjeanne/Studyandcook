@@ -14,13 +14,19 @@ import android.view.MenuItem;
 import android.view.View;
 
 import fr.wayofcode.studyandcook.R;
+import fr.wayofcode.studyandcook.databases.DbHelperFavorites;
+import fr.wayofcode.studyandcook.databases.DbHelperRecipes;
 import fr.wayofcode.studyandcook.fragments.AdvicesFragment;
 import fr.wayofcode.studyandcook.fragments.CategoriesFragment;
 import fr.wayofcode.studyandcook.fragments.ToolsFragment;
+import java.io.IOException;
 
 public class MenuActivity extends AppCompatActivity {
 
     public static final int NEW_ALARM = 1;
+
+    private DbHelperRecipes mDBhelperRecipes;
+    private DbHelperFavorites mDBhelperFavorites;
 
     private FragmentTabHost mTabHost;
 
@@ -90,6 +96,20 @@ public class MenuActivity extends AppCompatActivity {
                 ToolsFragment.class, null);
 
 
+        // Create database of recipes.
+        mDBhelperRecipes = new DbHelperRecipes(this);
+        mDBhelperFavorites = new DbHelperFavorites(this);
+
+
+        try {
+            mDBhelperRecipes.createDataBase();
+            mDBhelperFavorites.createDataBase();
+        }catch(IOException ioe){
+            throw new Error("Unable to create database");
+        }
+
+        mDBhelperRecipes.openDataBase();
+        mDBhelperFavorites.openDataBase();
 
     }
 

@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -35,6 +37,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import fr.wayofcode.studyandcook.utils.StorageHelper;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +60,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private static final int CAMERA_PIC_REQUEST = 22;
     public static final String NEW_RECIPE_ADDED = "new_recipe_added";
 
-    // Information about the steps/fields of the form
+    // Constants about the steps/fields of the form
     private static final int RECIPE_PICTURE_STEP_NUM = 0;
     private static final int RECIPE_TITLE_STEP_NUM = 1;
     private static final int TIME_STEP_NUM = 2;
@@ -69,8 +76,9 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     // Recipe picture step
     private ImageView mImgImageRecipe;
-    private ImageView mImgViewButton;
     private Button addPictureBtn;
+    private Bitmap pictureBitmap;
+    private ByteArrayOutputStream bytearrayoutputstream;
     public static final String STATE_RECIPE_PICTURE = "picture";
 
     // Recipe title step
@@ -115,7 +123,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private static final int MAX_PRICE_NUMBER = 9;
     public static final String STATE_PRICE = "price";
 
-    // Ingredient step
+    // Recipe Ingredient step
     private EditText editTxtIngredient;
     private Button btnAdd;
     private String ingredients;
@@ -130,7 +138,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     // Summary description step
     private EditText descriptionEditText;
-    private static final int MIN_CHARACTERS_RECIPE_DESCRIPTION = 3;
+    private static final int MIN_CHARACTERS_RECIPE_DESCRIPTION = 10;
     public static final String STATE_DESCRIPTION = "description";
 
     // Direction step
@@ -162,9 +170,25 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     private void initializeActivity() {
 
-        // initialize database
+        // Initialize the database
+        try
+        {
         mDBhelperRecipes = new DbHelperRecipes(this);
-        mDBhelperRecipes.openDataBase();
+
+            if(mDBhelperRecipes.checkDataBase()) {
+                mDBhelperRecipes.openDataBase();
+            }
+            else
+            {
+                mDBhelperRecipes.createDataBase();
+            }
+
+        }catch(SQLException sqle){
+        throw new Error("Unable to open database : ");
+         }
+        catch(IOException ioe){
+            throw new Error("Unable to create database");
+        }
 
         // Set toolbar as actionbar and up navigation button and set toolbar title to null
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -256,6 +280,9 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                 checkTitleStep(recipeNameEditText.getText().toString());
                 break;
             case SUMMARY_DESCRIPTION_STEP_NUM:
+                // When this step is open, we check that the summary is correct
+                checkSummaryStep(descriptionEditText.getText().toString());
+                break;
             case TIME_STEP_NUM:
                 // As soon as they are open, these two steps are marked as completed because they
                 // have default values
@@ -907,6 +934,27 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         return titleIsCorrect;
     }
 
+    private boolean checkSummaryStep(String summary) {
+        boolean summaryIsCorrect = false;
+
+        if (summary.length() >= MIN_CHARACTERS_RECIPE_DESCRIPTION) {
+            summaryIsCorrect = true;
+
+            verticalStepperForm.setActiveStepAsCompleted();
+            ;
+
+        } else {
+            String titleErrorString = getResources().getString(R.string.error_title_min_characters);
+            String titleError = String.format(titleErrorString, MIN_CHARACTERS_RECIPE_DESCRIPTION);
+
+            verticalStepperForm.setActiveStepAsUncompleted(titleError);
+
+
+        }
+
+        return summaryIsCorrect;
+    }
+
     private void setTime(int hour, int minutes) {
         time = new Pair<>(hour, minutes);
         String hourString = ((time.first > 9) ?
@@ -943,6 +991,60 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             finish();
         }
     }
+
+    private void saveCameraPicture( Bitmap picture , String recipeTitle) {
+
+        File file;
+        FileOutputStream fileoutputstream;
+
+        String title=recipeTitle.replace(' ','_').toLowerCase();
+
+        // compress picture to PNG format
+        picture.compress(Bitmap.CompressFormat.PNG, 60, bytearrayoutputstream);
+
+        try
+
+        {
+            // Test SD card is present
+            if (StorageHelper.isExternalStorageReadableAndWritable()) {
+
+                file = new File(
+                    Environment.getExternalStorageDirectory() + "/" + title + ".png");
+
+
+            } else {
+                file = new File(
+                    getFilesDir() + "/" + title + ".png");
+            }
+
+            // delete existing file
+            if (file.exists())
+                file.delete();
+
+            // create new filz
+            file.createNewFile();
+
+            fileoutputstream = new FileOutputStream(file);
+
+            fileoutputstream.write(bytearrayoutputstream.toByteArray());
+
+            fileoutputstream.close();
+        }
+        catch (Exception e)
+
+        {
+
+            e.printStackTrace();
+
+        }
+
+
+
+    }
+
+
+
+
 
     private void dismissDialog() {
 
