@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -138,7 +139,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     // Summary description step
     private EditText descriptionEditText;
-    private static final int MIN_CHARACTERS_RECIPE_DESCRIPTION = 10;
+    private static final int MIN_CHARACTERS_RECIPE_DESCRIPTION = 5;
     public static final String STATE_DESCRIPTION = "description";
 
     // Direction step
@@ -354,7 +355,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
         addPictureBtn.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_camera,0,0,0);
         addPictureBtn.setCompoundDrawablePadding(15);
-        addPictureBtn.setBackgroundColor(Color.GRAY);
+        addPictureBtn.setBackgroundResource(R.drawable.tags_rounded_corners);
         addPictureBtn.setText("Add picture ");
         addPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -410,7 +411,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         // Set the font size of the text that the user will enter
         recipeNameEditText.setTextSize(16);
 
-        recipeNameEditText.setBackgroundColor(Color.LTGRAY);
+        recipeNameEditText.setBackgroundColor(Color.GRAY);
         // Set the color of the text inside the EditText field
         recipeNameEditText.setTextColor(Color.BLACK);
         // Define layout params for the EditTExt field
@@ -465,7 +466,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private View createRecipeDescriptionStep() {
         descriptionEditText = new EditText(this);
         descriptionEditText.setHint(R.string.form_hint_description);
-        descriptionEditText.setBackgroundColor(Color.LTGRAY);
+        descriptionEditText.setHintTextColor(Color.BLACK);
+        descriptionEditText.setBackgroundColor(Color.GRAY);
         descriptionEditText.setTextColor(Color.BLACK);
         descriptionEditText.setSingleLine(true);
         descriptionEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -475,6 +477,33 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
                 return false;
             }
         });
+
+        descriptionEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                checkSummaryStep(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        descriptionEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (checkSummaryStep(v.getText().toString())) {
+                    verticalStepperForm.goToNextStep();
+                }
+                return false;
+            }
+        });
+
+
+
         return descriptionEditText;
     }
 
@@ -627,6 +656,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
     private void setIngredientComponent() {
         editTxtIngredient = new EditText(this);
+        editTxtIngredient.setText("");
 
         listIngredient= new ArrayList<>();
 
@@ -637,7 +667,9 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onClick(View view) {
 
-                if(editTxtIngredient.getText().toString() != null && editTxtIngredient.getText().toString().trim() != ""  ) {
+                String value=editTxtIngredient.getText().toString().trim();
+
+                if( !value.equals("") ) {
                     // this line adds the data of your EditText and puts in your array
                     listIngredient.add("+ " + editTxtIngredient.getText().toString());
                     editTxtIngredient.setText("");

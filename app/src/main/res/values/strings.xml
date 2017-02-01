@@ -108,8 +108,8 @@
     <string name="action_settings">Settings</string>
 
     <!-- form create recipe -->
-    <string name="form_hint_title">Alarm title (required)</string>
-    <string name="form_hint_description">Alarm description (optional)</string>
+    <string name="form_hint_title">Recipe title (required)</string>
+    <string name="form_hint_description">Recipe description (required)</string>
     <string name="error_title_min_characters">At least %1$d characters</string>
     <string name="main_activity_explanation">Click the button to try it!</string>
     <string name="hint_recipe_name">Recipe name</string>
