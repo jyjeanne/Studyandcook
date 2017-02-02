@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.SQLException;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -134,7 +133,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private ListView listViewIngredient;
     private LinearLayout ingredientLinearLayout;
     private ArrayAdapter<String> adapterIngredient;
-    private ArrayList<String> listIngredient;
+    private ArrayList<String> mainListIngredient;
+    private ArrayList<String> tempListIngredient;
     public static final String STATE_INGREDIENT = "ingredient";
 
     // Summary description step
@@ -658,7 +658,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         editTxtIngredient = new EditText(this);
         editTxtIngredient.setText("");
 
-        listIngredient= new ArrayList<>();
+        mainListIngredient = new ArrayList<>();
+        tempListIngredient = new ArrayList<>();
 
         addElementBtn=new Button(this);
         addElementBtn.setText("ADD NEW INGREDIENT");
@@ -667,11 +668,9 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onClick(View view) {
 
-                String value=editTxtIngredient.getText().toString().trim();
-
-                if( !value.equals("") ) {
+                if( !editTxtIngredient.getText().toString().trim().equals("") ) {
                     // this line adds the data of your EditText and puts in your array
-                    listIngredient.add("+ " + editTxtIngredient.getText().toString());
+                    tempListIngredient.add("+ " + editTxtIngredient.getText().toString());
                     editTxtIngredient.setText("");
                     // next thing you have to do is check if your adapter has changed
                     //adapterIngredient.add(editTxtIngredient.getText().toString());
@@ -684,7 +683,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
 
         // Adapter: You need three parameters 'the context, id of the layout (it will be where the data is shown),
         // and the array that contains the data
-        adapterIngredient = new ArrayAdapter<>(getApplicationContext(), R.layout.list_ingredient_item, listIngredient);
+        adapterIngredient = new ArrayAdapter<>(getApplicationContext(), R.layout.list_ingredient_item,
+            tempListIngredient);
 
         listViewIngredient.setAdapter(adapterIngredient);
 
@@ -707,42 +707,45 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // this line adds the data of your EditText and puts in your array
-                if(!listIngredient.isEmpty() )
+                if(!tempListIngredient.isEmpty() )
                 {
-                    if(listIngredient.size() >1) {
-                        int i = 0;
-                        StringBuilder concatIng = new StringBuilder();
-                        for (String ing : listIngredient) {
+                    if(tempListIngredient.size() >1) {
+                        for (String ing : tempListIngredient) {
 
-                            concatIng.append(ing);
-
-                            if (i != (listIngredient.size() - 1)) {
-                                concatIng.append("\n");
+                            if(!mainListIngredient.contains(ing))
+                            {
+                                mainListIngredient.add(ing);
                             }
-                            i++;
+
                         }
-                        if(ingredients!=null) {
-                            ingredients = ingredients + "\n" + concatIng.toString();
-                        }
-                        else
-                        {
-                            ingredients= concatIng.toString();
-                        }
+
                     }
                     else
                     {
-                        if(ingredients!=null) {
-                            ingredients = ingredients +"\n"+listIngredient.get(0);
-                        }
-                        else
+                        if(!mainListIngredient.contains(tempListIngredient.get(0)))
                         {
-                            ingredients=listIngredient.get(0);
+                            mainListIngredient.add(tempListIngredient.get(0));
                         }
+                    }
+
+                    int i = 0;
+                    StringBuilder concatIng = new StringBuilder();
+
+                    for(String ingr : mainListIngredient) {
+                        concatIng.append(ingr);
+
+                        if (i != (mainListIngredient.size() - 1)) {
+                            concatIng.append("\n");
+                        }
+                        i++;
 
                     }
-                }
-                ingredientTextView.setText(ingredients);
 
+                    ingredients = concatIng.toString();
+                    ingredientTextView.setText(ingredients);
+                }
+
+                tempListIngredient.clear();
                 verticalStepperForm.setActiveStepAsCompleted();
 
                 dialog.dismiss();
@@ -754,6 +757,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //verticalStepperForm.setActiveStepAsUncompleted("titleError");
+                tempListIngredient.clear();
                 dialog.cancel();
             }
         });
