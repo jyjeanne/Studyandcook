@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.pongodev.recipesapp.activities.HomeActivity" >
+    tools:context="fr.wayofcode.studyandcook.activities.HomeActivity" >
     <!-- menu item to display search icon, favorites, and about in HomeActivity -->
     <item android:id="@+id/menuSearch"
         android:title="@string/search"

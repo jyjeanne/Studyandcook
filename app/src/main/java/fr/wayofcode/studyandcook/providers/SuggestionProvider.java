@@ -9,7 +9,7 @@ import android.content.SearchRecentSuggestionsProvider;
  * Created using SearchRecentSuggestionsProvider.
  */
 public class SuggestionProvider extends SearchRecentSuggestionsProvider {
-    public final static String AUTHORITY = "com.pongodev.recipesapp.providers.ProviderSuggestion";
+    public final static String AUTHORITY = "fr.wayofcode.studyandcook.providers.SuggestionProvider";
     public final static int MODE = DATABASE_MODE_QUERIES;
 
     public SuggestionProvider(){

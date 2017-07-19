@@ -50,7 +50,7 @@ public class RecipesFragment extends Fragment {
     private String mCurrentKey = Utils.ARG_DEFAULT_CATEGORY_ID;
     private String mActivePage = Utils.ARG_CATEGORY;
 
-    private boolean mIsAdmobVisible;
+    //private boolean mIsAdmobVisible;
 
     // Create arraylist variables to store data
     private ArrayList<String> mRecipeIds = new ArrayList<>();

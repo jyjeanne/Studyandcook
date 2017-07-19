@@ -42,12 +42,13 @@ public class DirectionAdapter extends ArrayAdapter<Direction> {
             rowView = inflater.inflate(R.layout.row_direction, parent, false);
 
             // 3. Get icon,title & counter views from the rowView
-            TextView titleView = (TextView) rowView.findViewById(R.id.item_title);
-            TextView counterView = (TextView) rowView.findViewById(R.id.item_counter);
+            TextView counterView = (TextView) rowView.findViewById(R.id.direction_counter);
+            TextView titleView = (TextView) rowView.findViewById(R.id.direction_text);
+
 
             // 4. Set the text for textView
-            titleView.setText(modelsArrayList.get(position).getTitle());
-            counterView.setText(modelsArrayList.get(position).getCounter());
+            titleView.setText(modelsArrayList.get(position).getDescritpion());
+            counterView.setText(modelsArrayList.get(position).getStringOrder());
 
 
 

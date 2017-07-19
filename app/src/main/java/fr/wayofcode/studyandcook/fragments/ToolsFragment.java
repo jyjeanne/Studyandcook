@@ -13,9 +13,9 @@ import fr.wayofcode.studyandcook.R;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ToolsFragment.OnFragmentInteractionListener} interface
+ * interface
  * to handle interaction events.
- * Use the {@link ToolsFragment#newInstance} factory method to
+ * Use the factory method to
  * create an instance of this fragment.
  */
 public class ToolsFragment extends Fragment {

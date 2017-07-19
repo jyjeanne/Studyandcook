@@ -6,33 +6,38 @@ package fr.wayofcode.studyandcook.model;
 
 public class Direction {
 
-    private String title;
-    private String counter;
+  private String descritpion;
 
+  private int order;
 
-    public Direction(String title) {
-        this(title,null);
+  public int getOrder() {
+    return order;
+  }
 
-    }
-    public Direction( String title, String counter) {
-        super();
-        this.title = title;
-        this.counter = counter;
-    }
+  public String getStringOrder() {
+    return String.valueOf(order);
+  }
 
-    public String getCounter() {
-        return counter;
-    }
+  public void setOrder(int order) {
+    this.order = order;
+  }
 
-    public void setCounter(String counter) {
-        this.counter = counter;
-    }
+  public Direction(String descritpion, int order) {
+    super();
+    this.descritpion = descritpion;
+    this.order = order;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  @Override
+  public String toString() {
+    return order + "-" + descritpion;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getDescritpion() {
+    return descritpion;
+  }
+
+  public void setDescritpion(String descritpion) {
+    this.descritpion = descritpion;
+  }
 }

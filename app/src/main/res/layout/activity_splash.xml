@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:src="@mipmap/splash_screen_logo"
         android:layout_centerInParent="true"
+        android:contentDescription="@string/logo_desc"
         android:id="@+id/imageView" />
 
     <TextView

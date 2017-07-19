@@ -149,11 +149,12 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private TextView directionTextView;
     private int directionCounter;
     private Button addNewDirectionBtn;
-    private AlertDialog directionRecipeDialog ;
+    private AlertDialog directionRecipeDialog;
     private ListView directionListView;
     private LinearLayout directionLinearLayout;
     private DirectionAdapter adapterDirection;
-    private ArrayList<Direction> listDirection;
+    private ArrayList<Direction> mainListDirection;
+    private ArrayList<Direction> tempListDirection;
     public static final String STATE_DIRECTION = "direction";
 
     private boolean confirmBack = true;
@@ -415,8 +416,8 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         // Set the color of the text inside the EditText field
         recipeNameEditText.setTextColor(Color.BLACK);
         // Define layout params for the EditTExt field
-        RelativeLayout.LayoutParams editTextParams = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams editTextParams = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         // Set editText layout parameters to the editText field
         recipeNameEditText.setLayoutParams(editTextParams);
 
@@ -502,8 +503,6 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             }
         });
 
-
-
         return descriptionEditText;
     }
 
@@ -513,16 +512,16 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         LinearLayout directionStepContent =
                 (LinearLayout) inflater.inflate(R.layout.step_direction, null, false);
         directionListView = (ListView)  directionStepContent.findViewById(R.id.list_direction);
-        adapterDirection=new DirectionAdapter(this,listDirection);
+        adapterDirection=new DirectionAdapter(this, mainListDirection);
         directionListView.setAdapter(adapterDirection);
 
         directionAddBtn = (Button) directionStepContent.findViewById(R.id.directionAddBtn);
         directionAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Test
+                // Test the createDirectionStep
                 if(directionRecipeDialog==null) {
-                    setIngredientComponent();
+                    setDirectionComponent();
                 }
                 directionRecipeDialog.show();
             }
@@ -622,11 +621,12 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
     private void setDirectionComponent() {
 
         directionCounter=0;
+
         directionEditTxt = new EditText(this);
+        directionEditTxt.setText("");
 
-        listDirection= new ArrayList<>();
-
-        adapterDirection=new DirectionAdapter(this, listDirection);
+        mainListDirection = new ArrayList<>();
+        tempListDirection = new ArrayList<>();
 
         addNewDirectionBtn=new Button(this);
         addNewDirectionBtn.setText("ADD NEW DIRECTION");
@@ -635,26 +635,109 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
             @Override
             public void onClick(View view) {
                 // this line adds the data of your EditText and puts in your array
-                if(directionEditTxt.getText().toString() != null && directionEditTxt.getText().toString().trim() != ""  ) {
+                if( !directionEditTxt.getText().toString().trim().equals("") ) {
 
-                    Direction direction = new Direction(Integer.toString(directionCounter), directionEditTxt.getText().toString());
-                    listDirection.add(direction);
+                    Direction direction = new Direction(directionEditTxt.getText().toString(),directionCounter);
+                    tempListDirection.add(direction);
                     directionEditTxt.setText("");
-                    // next thing you have to do is check if your adapter has changed
-                    adapterDirection.add(direction);
-                    adapterDirection.notifyDataSetChanged();
-                    ;
                     directionCounter++;
+                    // next thing you have to do is check if your adapter has changed
+                    //adapterDirection.add(direction);
+                    adapterDirection.notifyDataSetChanged();
+
+
                 }
             }
         });
 
+        directionListView= new ListView(this);
 
+        adapterDirection=new DirectionAdapter(this, tempListDirection);
+
+        directionListView.setAdapter(adapterDirection);
+
+        //create a layout
+        LinearLayout.LayoutParams params =
+            new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        directionLinearLayout = new LinearLayout(this);
+        directionLinearLayout.setOrientation(LinearLayout.VERTICAL);
+        directionLinearLayout.setLayoutParams(params);
+
+        directionLinearLayout.addView(directionEditTxt);
+        directionLinearLayout.addView(addNewDirectionBtn);
+        directionLinearLayout.addView(directionListView);
+
+        AlertDialog.Builder builder  = new AlertDialog.Builder(this).setView(directionLinearLayout);
+        builder.setTitle("Directions");
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // this line adds the data of your EditText and puts in your array
+                if(!tempListDirection.isEmpty() )
+                {
+                    if(tempListDirection.size() >1) {
+                        for (Direction direction : tempListDirection) {
+
+                            if(!mainListDirection.contains(direction))
+                            {
+                                mainListDirection.add(direction);
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+                        if(!mainListDirection.contains(tempListDirection.get(0)))
+                        {
+                            mainListDirection.add(tempListDirection.get(0));
+                        }
+                    }
+
+                    int i = 0;
+                    StringBuilder concatIng = new StringBuilder();
+
+                    for(Direction direction : mainListDirection) {
+                        concatIng.append(direction.toString());
+
+                        if (i != (mainListDirection.size() - 1)) {
+                            concatIng.append("\n");
+                        }
+                        i++;
+
+                    }
+
+                    directions = concatIng.toString();
+                    // TO DO directionTextView.setText(directions);
+                }
+
+                tempListDirection.clear();
+                verticalStepperForm.setActiveStepAsCompleted();
+
+                dialog.dismiss();
+
+            }
+        });
+
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                tempListDirection.clear();
+                dialog.cancel();
+            }
+        });
+
+        directionRecipeDialog=builder.create();
 
     }
 
-
-    private void setIngredientComponent() {
+  /**
+   *
+   */
+  private void setIngredientComponent() {
         editTxtIngredient = new EditText(this);
         editTxtIngredient.setText("");
 
@@ -662,7 +745,7 @@ public class NewRecipeActivity extends AppCompatActivity implements VerticalStep
         tempListIngredient = new ArrayList<>();
 
         addElementBtn=new Button(this);
-        addElementBtn.setText("ADD NEW INGREDIENT");
+        addElementBtn.setText(R.string.recipe_form_ingredient);
         addElementBtn.setTextColor(Color.WHITE);
         addElementBtn.setOnClickListener(new View.OnClickListener() {
             @Override

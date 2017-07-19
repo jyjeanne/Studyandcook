@@ -15,10 +15,10 @@
 
     <Button
         android:id="@+id/directionAddBtn"
-        android:text="Add New Item"
+        android:text="Add New Direction"
         android:textColor="#ffffff"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="addItems"/>
+        />
 
 </LinearLayout>

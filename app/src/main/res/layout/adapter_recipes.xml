@@ -42,7 +42,7 @@
             android:textSize="@dimen/title"
             android:textColor="@color/primary_text"
             android:ellipsize="end"
-            android:singleLine="true"/>
+            android:maxLines="1"/>
         <TextView
             android:id="@+id/txtRecipeInfo"
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:textSize="@dimen/subhead"
             android:textColor="@color/secondary_text"
             android:ellipsize="end"
-            android:singleLine="true"/>
+            android:maxLines="1"/>
     </LinearLayout>
 
     <View

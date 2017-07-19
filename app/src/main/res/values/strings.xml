@@ -117,6 +117,11 @@
     <string name="hint_recipe_time">Recipe time</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="recipe_form_ingredient">ADD NEW INGREDIENT</string>
+
+    <!-- picture -->
+    <string name="picture_desc">picture description</string>
+    <string name="logo_desc">logo description</string>
 
     <string-array name="steps_names">
         <item>Picture</item>
